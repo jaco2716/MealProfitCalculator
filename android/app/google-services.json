@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "196957272309",
+    "firebase_url": "https://leos-wok.firebaseio.com",
+    "project_id": "leos-wok",
+    "storage_bucket": "leos-wok.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196957272309:android:cd117c0d4c732bbc6eedbc",
+        "android_client_info": {
+          "package_name": "dk.wejeo.leoswok_clientapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196957272309-db3t6ofrltaq5ub5dqn07tie95fiklna.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.wejeo.leoswok_clientapp",
+            "certificate_hash": "7f5ab958c92a28c4e3086957a003861f367166f1"
+          }
+        },
+        {
+          "client_id": "196957272309-13v4cantd89t8is6lb4msd1ei4l29m2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKTVRXC_c6byPGV-2vfuqopfVm0BFxG6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196957272309-13v4cantd89t8is6lb4msd1ei4l29m2l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "196957272309-u0t2p3rcc7q51q7v84jdn9sq89m95heq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dk.wejeo.leoswokClientapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196957272309:android:e7b6cba3c2078a256eedbc",
+        "android_client_info": {
+          "package_name": "dk.wejeo.leoswok_takeaway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196957272309-b8hde7i93aloa0is4986vh16b5l54lbk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.wejeo.leoswok_takeaway",
+            "certificate_hash": "7f5ab958c92a28c4e3086957a003861f367166f1"
+          }
+        },
+        {
+          "client_id": "196957272309-13v4cantd89t8is6lb4msd1ei4l29m2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKTVRXC_c6byPGV-2vfuqopfVm0BFxG6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196957272309-13v4cantd89t8is6lb4msd1ei4l29m2l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "196957272309-u0t2p3rcc7q51q7v84jdn9sq89m95heq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dk.wejeo.leoswokClientapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196957272309:android:31a110f6f248c0e16eedbc",
+        "android_client_info": {
+          "package_name": "dk.wejeo.meal_profit_calculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196957272309-13v4cantd89t8is6lb4msd1ei4l29m2l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKTVRXC_c6byPGV-2vfuqopfVm0BFxG6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196957272309-13v4cantd89t8is6lb4msd1ei4l29m2l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "196957272309-u0t2p3rcc7q51q7v84jdn9sq89m95heq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dk.wejeo.leoswokClientapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
