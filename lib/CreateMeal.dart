@@ -265,20 +265,21 @@ class _CreateMealState extends State<CreateMeal> {
 
       if (nullIndex == -1) {
         _formKey.currentState.save();
-        double finalSalePrice;
+        double _finalSalePrice;
 
-        double totalPrice = 0;
+        double _totalPrice = 0;
         _selectedIngredients.forEach((e) {
-          totalPrice += (e.amountInGrams / 1000) * e.kgPrice;
+          _totalPrice += (e.amountInGrams / 1000) * e.kgPrice;
         });
 
         if (_salePriceChosen)
-          finalSalePrice = double.parse(_salePrice);
+          _finalSalePrice = double.parse(_salePrice);
         else
-          finalSalePrice =
-              ((totalPrice / (1 - double.parse(_profitMargin) / 100)) * 100)
-                      .roundToDouble() /
-                  100;
+          _finalSalePrice = _totalPrice / (1 - double.parse(_profitMargin) / 100);
+          
+          
+
+          _finalSalePrice = (_finalSalePrice  * 100).roundToDouble() /100;
 
         int newID;
         if (!dublicate) {
@@ -290,7 +291,7 @@ class _CreateMealState extends State<CreateMeal> {
           newID = DateTime.now().millisecondsSinceEpoch;
 
         // print(newID);
-        Meal newMeal = Meal(newID, _name, finalSalePrice, _selectedIngredients);
+        Meal newMeal = Meal(newID, _name, _finalSalePrice, _selectedIngredients);
 
         bool dbSucess = false;
         try {
@@ -364,7 +365,7 @@ class _CreateMealState extends State<CreateMeal> {
           trailing: Row(mainAxisSize: MainAxisSize.min, children: [
             Container(
                 padding: EdgeInsets.all(5),
-                width: 100,
+                width: 90,
                 child: TextField(
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
@@ -374,12 +375,12 @@ class _CreateMealState extends State<CreateMeal> {
                   maxLengthEnforced: true,
                   controller: tec,
                   decoration: InputDecoration(
-                      hintText: 'Grams',
+                      // hintText: ingredient.measureUnit == 'Kg' ? 'Grams  ' : 'Mililiter',
                       border: OutlineInputBorder(),
                       counterText: ''),
                   onChanged: (value) => takeNumber(value, ingredient.id),
                 )),
-            Text('g')
+            Text(ingredient.measureUnit == 'Kg' ? 'g  ' : 'ml')
           ])),
     );
   }

@@ -36,7 +36,11 @@ class _MealListState extends State<MealList> {
                     return Center(child: Text("Loading"));
                   }
                   if (mealSnapshot.data.docs.length == 0) {
-                    return Center(child: Text("You have no meals.\nCreate some in the menu.", textAlign: TextAlign.center,));
+                    return Center(
+                        child: Text(
+                      "You have no meals.\nCreate some in the menu.",
+                      textAlign: TextAlign.center,
+                    ));
                   }
 
                   List<Meal> meals = List<Meal>();
@@ -52,17 +56,19 @@ class _MealListState extends State<MealList> {
                             ConnectionState.waiting)
                           return Center(child: CircularProgressIndicator());
 
-                        List<Ingredient> mealIngredients = ingredientSnapshot
+                        List<Ingredient> allIngredients = ingredientSnapshot
                             .data.docs
                             ?.map((e) => Ingredient.fromJson(e.data()))
                             ?.toList();
 
-                        meals.forEach((m) {
-                          m.ingredients.forEach((i) {
-                            mealIngredients.forEach((mi) {
-                              if (i.id == mi.id) {
-                                i.kgPrice = mi.kgPrice;
-                                // print("Name: ${i.name}, Price: ${i.kgPrice}");
+                        meals.forEach((meal) {
+                          meal.ingredients.forEach((ingredient) {
+                            allIngredients.forEach((aIngredient) {
+                              if (ingredient.id == aIngredient.id) {
+                                ingredient.name = aIngredient.name;
+                                ingredient.color = aIngredient.color;
+                                ingredient.kgPrice = aIngredient.kgPrice;
+                                ingredient.measureUnit = aIngredient.measureUnit;
                               }
                             });
                           });

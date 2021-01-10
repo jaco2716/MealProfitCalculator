@@ -45,61 +45,66 @@ class _ChartPageState extends State<ChartPage> {
     return Scaffold(
       appBar: AppBar(title: Text('Charts')),
       backgroundColor: Colors.blueGrey[900],
-      body: StreamBuilder<QuerySnapshot>(
-        stream: firestoreData,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) return Text('Something went wrong');
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Center(child: CircularProgressIndicator());
+      body: SingleChildScrollView(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: firestoreData,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) return Text('Something went wrong');
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(child: CircularProgressIndicator());
 
-          if (dropDownValue == "Leo's Wok Orders")
-            orderList = snapshot.data.docs
-                ?.map((e) => Order.fromJson(e.data()))
-                ?.toList();
-          else
-            mealList = snapshot.data.docs
-                ?.map((e) => Meal.fromJson(e.data()))
-                ?.toList();
+            if (dropDownValue == "Leo's Wok Orders")
+              orderList = snapshot.data.docs
+                  ?.map((e) => Order.fromJson(e.data()))
+                  ?.toList();
+            else
+              mealList = snapshot.data.docs
+                  ?.map((e) => Meal.fromJson(e.data()))
+                  ?.toList();
 
-          return StreamBuilder<QuerySnapshot>(
-              stream: FirestoreRef.ingredientRef.snapshots(),
-              builder: (context, ingredientSnapshot) {
-                if (ingredientSnapshot.hasError)
-                  return Center(child: Text('Something went wrong'));
-                if (ingredientSnapshot.connectionState ==
-                    ConnectionState.waiting)
-                  return Center(child: CircularProgressIndicator());
+            return StreamBuilder<QuerySnapshot>(
+                stream: FirestoreRef.ingredientRef.snapshots(),
+                builder: (context, ingredientSnapshot) {
+                  if (ingredientSnapshot.hasError)
+                    return Center(child: Text('Something went wrong'));
+                  if (ingredientSnapshot.connectionState ==
+                      ConnectionState.waiting)
+                    return Center(child: CircularProgressIndicator());
 
-                List<Ingredient> mealIngredients = ingredientSnapshot.data.docs
-                    ?.map((e) => Ingredient.fromJson(e.data()))
-                    ?.toList();
+                  List<Ingredient> mealIngredients = ingredientSnapshot
+                      .data.docs
+                      ?.map((e) => Ingredient.fromJson(e.data()))
+                      ?.toList();
 
-                mealList.forEach((m) {
-                  m.ingredients.forEach((i) {
-                    mealIngredients.forEach((mi) {
-                      if (i.id == mi.id) {
-                        i.kgPrice = mi.kgPrice;
-                        // print("Name: ${i.name}, Price: ${i.kgPrice}");
-                      }
+                  mealList.forEach((m) {
+                    m.ingredients.forEach((i) {
+                      mealIngredients.forEach((mi) {
+                        if (i.id == mi.id) {
+                          i.kgPrice = mi.kgPrice;
+                          // print("Name: ${i.name}, Price: ${i.kgPrice}");
+                        }
+                      });
                     });
                   });
+
+                  // print('lengthththt: ' + orderList.length.toString());
+                  if (dropDownValue == "Profit Margin")
+                    _changeToProfitMargin();
+                  else if (dropDownValue == "Total Cost / Sale Price")
+                    _changeToSaleCost();
+                  else if (dropDownValue == "Profit")
+                    _changeToProfit();
+                  else if (dropDownValue == "Leo's Wok Orders")
+                    _changeToOrders();
+
+                  return _chartWidget(
+                      chartList, chartListTitles, maxy, miny, chartTitle,
+                      secoundChartList: secoundaryChartList,
+                      subtitle: chartSubtitle);
                 });
-
-                // print('lengthththt: ' + orderList.length.toString());
-                if (dropDownValue == "Profit Margin")
-                  _changeToProfitMargin();
-                else if (dropDownValue == "Total Cost / Sale Price")
-                  _changeToSaleCost();
-                else if (dropDownValue == "Profit")
-                  _changeToProfit();
-                else if (dropDownValue == "Leo's Wok Orders") _changeToOrders();
-
-                return _chartWidget(
-                    chartList, chartListTitles, maxy, miny, chartTitle,
-                    secoundChartList: secoundaryChartList,
-                    subtitle: chartSubtitle);
-              });
-        },
+          },
+        ),
       ),
     );
   }
@@ -108,14 +113,37 @@ class _ChartPageState extends State<ChartPage> {
       double _maxy, double _miny, String _title,
       {List<FlSpot> secoundChartList, String subtitle}) {
     _chartList.forEach((e) {
-      if (_maxy < e.y + 1) _maxy = e.y.roundToDouble() + 1;
-      if (_miny > e.y - 1) _miny = e.y.roundToDouble() - 1;
+      if (_maxy < e.y + 1) _maxy = e.y.roundToDouble();
+      if (_miny > e.y - 1) _miny = e.y.roundToDouble();
     });
 
     secoundChartList?.forEach((e) {
-      if (_maxy < e.y + 1) _maxy = e.y.roundToDouble() + 1;
-      if (_miny > e.y - 1) _miny = e.y.roundToDouble() - 1;
+      if (_maxy < e.y + 1) _maxy = e.y.roundToDouble();
+      if (_miny > e.y - 1) _miny = e.y.roundToDouble();
     });
+
+    double _chartHeight = _maxy - _miny;
+    if (_chartHeight > 100) {
+      _miny -= 20;
+      _maxy += 20;
+    } else {
+      _miny -= 2;
+      _maxy += 2;
+    }
+
+    double _nrInterval = 0;
+
+    if (_chartHeight > 1000)
+      _nrInterval = 200;
+    else if (_chartHeight > 250)
+      _nrInterval = 50;
+    else if (_chartHeight > 100)
+      _nrInterval = 10;
+    else if (_chartHeight > 50)
+      _nrInterval = 5;
+    else if (_chartHeight > 20)
+      _nrInterval = 2;
+    else if (_chartHeight <= 20) _nrInterval = 1;
 
     return Center(
       child: Column(
@@ -152,23 +180,7 @@ class _ChartPageState extends State<ChartPage> {
                           TextStyle(color: Colors.white, fontSize: 12),
                       showTitles: true,
                       getTitles: (value) {
-                        double chartHeight = _maxy - _miny;
-
-                        if (chartHeight > 1000 && value % 200 == 0)
-                          return value.round().toString();
-                        else if (chartHeight > 200 &&
-                            chartHeight <= 1000 &&
-                            value % 50 == 0)
-                          return value.round().toString();
-                        else if (chartHeight > 50 &&
-                            chartHeight <= 200 &&
-                            value % 5 == 0)
-                          return value.round().toString();
-                        else if (chartHeight > 20 &&
-                            chartHeight <= 50 &&
-                            value % 2 == 0)
-                          return value.round().toString();
-                        else if (chartHeight <= 20 && value % 1 == 0)
+                        if (value % _nrInterval == 0)
                           return value.round().toString();
                         else
                           return '';
@@ -197,17 +209,12 @@ class _ChartPageState extends State<ChartPage> {
                       color: Colors.white38,
                       strokeWidth: 1,
                     );
-                    if (_maxy > 200 && value % 100 == 0) {
-                      return thickLine;
-                    } else if (_maxy > 50 && _maxy < 200 && value % 5 == 0) {
-                      return thickLine;
-                    } else if (_maxy <= 50 && value % 2 == 0) {
+                    if (value % _nrInterval == 0) {
                       return thickLine;
                     } else {
                       return FlLine(
                         color: Colors.white12,
-                        strokeWidth: 0,
-                        // dashArray: [5,10]
+                        strokeWidth: 0.001,
                       );
                     }
                   },
