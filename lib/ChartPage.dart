@@ -36,6 +36,7 @@ class _ChartPageState extends State<ChartPage> {
     _getInitialData();
   }
 
+// Make firestore get into a stream of data
   _getInitialData() async {
     firestoreData = FirestoreRef.mealRef.get().asStream();
   }
@@ -54,6 +55,7 @@ class _ChartPageState extends State<ChartPage> {
             if (snapshot.connectionState == ConnectionState.waiting)
               return Container(height: 400, child: Center(child: CircularProgressIndicator()));
 
+//Check if Leo's Wok Orders is selected because then Another map object is used. and then map data from firestore.
             if (dropDownValue == "Leo's Wok Orders")
               orderList = snapshot.data.docs
                   ?.map((e) => Order.fromJson(e.data()))
@@ -72,23 +74,24 @@ class _ChartPageState extends State<ChartPage> {
                       ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());
 
+//Map data from firestore to list.
                   List<Ingredient> mealIngredients = ingredientSnapshot
                       .data.docs
                       ?.map((e) => Ingredient.fromJson(e.data()))
                       ?.toList();
 
+//Change to updated Kgprice - Like JOIN
                   mealList.forEach((m) {
                     m.ingredients.forEach((i) {
                       mealIngredients.forEach((mi) {
                         if (i.id == mi.id) {
                           i.kgPrice = mi.kgPrice;
-                          // print("Name: ${i.name}, Price: ${i.kgPrice}");
                         }
                       });
                     });
                   });
 
-                  // print('lengthththt: ' + orderList.length.toString());
+//Check what chart is selected
                   if (dropDownValue == "Profit Margin")
                     _changeToProfitMargin();
                   else if (dropDownValue == "Total Cost / Sale Price")
@@ -109,9 +112,12 @@ class _ChartPageState extends State<ChartPage> {
     );
   }
 
+// The Chart widget builder.
   Widget _chartWidget(List<FlSpot> _chartList, List<String> _chartListTitles,
       double _maxy, double _miny, String _title,
       {List<FlSpot> secoundChartList, String subtitle}) {
+
+// Check the max and min values for the charts
     _chartList.forEach((e) {
       if (_maxy < e.y + 1) _maxy = e.y.roundToDouble();
       if (_miny > e.y - 1) _miny = e.y.roundToDouble();
@@ -122,6 +128,7 @@ class _ChartPageState extends State<ChartPage> {
       if (_miny > e.y - 1) _miny = e.y.roundToDouble();
     });
 
+// Find chart height.
     double _chartHeight = _maxy - _miny;
     if (_chartHeight > 100) {
       _miny -= 20;
@@ -131,8 +138,8 @@ class _ChartPageState extends State<ChartPage> {
       _maxy += 2;
     }
 
+// Set interval that is used on y-axis
     double _nrInterval = 0;
-
     if (_chartHeight > 1000)
       _nrInterval = 200;
     else if (_chartHeight > 250)
@@ -182,6 +189,7 @@ class _ChartPageState extends State<ChartPage> {
                           TextStyle(color: Colors.white, fontSize: 12),
                       showTitles: true,
                       getTitles: (value) {
+//Y-axis numbers in interval
                         if (value % _nrInterval == 0)
                           return value.round().toString();
                         else
@@ -195,6 +203,7 @@ class _ChartPageState extends State<ChartPage> {
                             TextStyle(color: Colors.white, fontSize: 12),
                         showTitles: true,
                         getTitles: (value) {
+// x-Axis titels
                           String itemName = _chartListTitles[value.toInt()];
 
                           if (itemName.length > 17) {
@@ -207,10 +216,12 @@ class _ChartPageState extends State<ChartPage> {
                   horizontalInterval: 1,
                   show: true,
                   getDrawingHorizontalLine: (value) {
+// When to draw the horizontal chart lines with interval
                     FlLine thickLine = FlLine(
                       color: Colors.white38,
                       strokeWidth: 1,
                     );
+//Draw thick line at 0
                     if(value == 0) {
                       return FlLine(
                         color: Colors.white,
@@ -228,6 +239,7 @@ class _ChartPageState extends State<ChartPage> {
                   },
                   drawVerticalLine: true,
                   getDrawingVerticalLine: (value) {
+//Draw vertical lines on chart
                     return FlLine(
                       color: Colors.white54,
                       strokeWidth: 1,
@@ -237,6 +249,7 @@ class _ChartPageState extends State<ChartPage> {
                 borderData: FlBorderData(
                     show: true,
                     border: Border.all(color: Colors.black, width: 1)),
+//Populate chart with data.
                 lineBarsData: [
                   LineChartBarData(
                     isCurved: true,
@@ -250,6 +263,7 @@ class _ChartPageState extends State<ChartPage> {
                     ]),
                     spots: _chartList,
                   ),
+// Check if there is 2 charts
                   if (secoundChartList != null)
                     LineChartBarData(
                       isCurved: true,
@@ -276,6 +290,7 @@ class _ChartPageState extends State<ChartPage> {
     );
   }
 
+//Button to choose what chart to see
   Widget _customDropDownButton() {
     return Card(
       color: Colors.blue,
@@ -299,6 +314,7 @@ class _ChartPageState extends State<ChartPage> {
               );
             }).toList(),
             onChanged: (String newValue) {
+//What firestore refference should be used according to what chart is chosen
               switch (newValue) {
                 case "Profit Margin":
                   firestoreData = FirestoreRef.mealRef.get().asStream();
@@ -326,11 +342,13 @@ class _ChartPageState extends State<ChartPage> {
     );
   }
 
+//Round a double with n amount of decimals
   double _roundDouble(double value, int places) {
     double mod = pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
   }
 
+//change UI show profitmargin chart
   _changeToProfitMargin() {
     chartTitle = 'Profit Margin';
     chartSubtitle = null;
@@ -347,6 +365,7 @@ class _ChartPageState extends State<ChartPage> {
     chartListTitles = mealList?.map<String>((v) => v.name)?.toList();
   }
 
+//change UI show Sale/Cost chart
   _changeToSaleCost() {
     chartTitle = 'Sale Price';
     chartSubtitle = 'Total Cost';
@@ -367,6 +386,7 @@ class _ChartPageState extends State<ChartPage> {
     chartListTitles = mealList?.map<String>((v) => v.name)?.toList();
   }
 
+//change UI show profit chart
   _changeToProfit() {
     chartTitle = 'Profit';
     chartSubtitle = null;
@@ -383,6 +403,7 @@ class _ChartPageState extends State<ChartPage> {
     chartListTitles = mealList?.map<String>((v) => v.name)?.toList();
   }
 
+//change UI show Orders chart
   _changeToOrders() {
     chartTitle = 'Orders';
     chartSubtitle = null;

@@ -18,6 +18,7 @@ class _MealListState extends State<MealList> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+//Show a loading circle if isLoading is true.
     return isLoading
         ? Center(
             child: CircularProgressIndicator(),
@@ -45,7 +46,7 @@ class _MealListState extends State<MealList> {
                           textAlign: TextAlign.center,
                         ));
                       }
-
+//Map data from firestore to list of objects
                       List<Meal> meals = List<Meal>();
                       meals = mealSnapshot.data.docs
                           ?.map((e) => Meal.fromJson(e.data()))
@@ -58,12 +59,12 @@ class _MealListState extends State<MealList> {
                             if (ingredientSnapshot.connectionState ==
                                 ConnectionState.waiting)
                               return Center(child: CircularProgressIndicator());
-
+//Mao ingredients from firestore to new list.
                             List<Ingredient> allIngredients = ingredientSnapshot
                                 .data.docs
                                 ?.map((e) => Ingredient.fromJson(e.data()))
                                 ?.toList();
-
+//JOIN meals with updated ingredients because Firestore does not have SQL JOIN.
                             meals.forEach((meal) {
                               meal.ingredients.forEach((ingredient) {
                                 allIngredients.forEach((aIngredient) {
@@ -127,16 +128,11 @@ class _MealListState extends State<MealList> {
           );
   }
 
+//List Tile for every meal
   Widget mealListTile(Meal meal) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      // color: Colors.red[100],
       child: ListTile(
-        // leading: CircleAvatar(
-        //   child: Text(meal.id.toString(), style: TextStyle(color: Colors.white),),
-        //   radius: 15,
-        //   backgroundColor: Colors.blue[200],
-        // ),
         title: Text(meal.name),
         subtitle: Text('${meal.ingredients.length} Ingredients'),
         trailing: Row(
@@ -155,6 +151,7 @@ class _MealListState extends State<MealList> {
           ],
         ),
         onTap: () {
+//Go to meal page when tapped.
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => SingleMeal(meal.name, meal),
           ));
@@ -164,6 +161,7 @@ class _MealListState extends State<MealList> {
     );
   }
 
+//Show menu to change all profit margins
   _showChangeProfitMargin(BuildContext context, List<Meal> meals) {
     showDialog(
       context: context,
@@ -201,7 +199,7 @@ class _MealListState extends State<MealList> {
             RaisedButton(
               onPressed: () async {
                 Navigator.pop(context);
-
+//set isLeading to true and update page so it shows a loading screen. then set to false again after async call.
                 setState(() {
                   isLoading = true;
                 });
@@ -218,6 +216,7 @@ class _MealListState extends State<MealList> {
     );
   }
 
+//function to calculate all prices from profit margin and then save.
   Future<bool> _changeAllProfitMargin(
       String textFieldText, List<Meal> meals) async {
     String textfield = textFieldText;
@@ -236,7 +235,7 @@ class _MealListState extends State<MealList> {
         meal.salePrice = newSalePrice;
         print(dbSucess);
       }
-
+//show error or success message
       if (dbSucess) {
         // setState(() {});
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -255,6 +254,7 @@ class _MealListState extends State<MealList> {
     return false;
   }
 
+//Save the profitmargins calculated to firestore database
   Future<bool> _saveProfitMarginToDB(String id, double salePrice) {
     return FirestoreRef.mealRef
         .doc(id)

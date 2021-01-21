@@ -28,18 +28,6 @@ class SingleMeal extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-          // child: StreamBuilder<QuerySnapshot>(
-          //         stream: FirestoreRef.ingredientRef.where("id" ,whereIn: meal.ingredients.map((e) => e.id).toList()).snapshots(),
-          //         builder: (context, snapshot) {
-          //           if (snapshot.hasError)
-          //             return Center(child: Text('Something went wrong'));
-          //           if (snapshot.connectionState == ConnectionState.waiting)
-          //             return Center(child: CircularProgressIndicator());
-          //           List<Ingredient> mealIngredients = snapshot.data.docs?.map((e) => Ingredient.fromJson(e.data()))?.toList();
-          //           mealIngredients.asMap().entries.forEach((e) { e.value.amountInGrams = meal.ingredients[e.key].amountInGrams;});
-          //           meal.ingredients = mealIngredients;
-          //           print('ingredients:  -- '+mealIngredients.toString());
-
           child: Column(
         children: [
           Card(
@@ -174,6 +162,7 @@ class SingleMeal extends StatelessWidget {
     );
   }
 
+//Show menu to calculate price from profit margin
   _showChangeProfitMargin(BuildContext context) {
     showDialog(
       context: context,
@@ -210,6 +199,7 @@ class SingleMeal extends StatelessWidget {
                 child: Text('Cancel')),
             RaisedButton(
               onPressed: () async {
+//Calculate price from profit margin and save it to firestore.
                 String textfield = tec.text;
                 double profitMargin;
                 if (textfield != null)
@@ -248,6 +238,7 @@ class SingleMeal extends StatelessWidget {
     );
   }
 
+//Show menu to delete meal.
   _deleteMealDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -273,6 +264,7 @@ class SingleMeal extends StatelessWidget {
     );
   }
 
+//delete meal and show error/ succes message
   _deleteMeal(BuildContext context) async {
     bool deleteSuccess = false;
 
@@ -294,6 +286,7 @@ class SingleMeal extends StatelessWidget {
     }
   }
 
+//delete meal from firestore database
   Future<bool> _deleteMealFromDB(Meal newMeal) {
     return FirestoreRef.mealRef
         .doc(newMeal.id.toString())
@@ -307,6 +300,7 @@ class SingleMeal extends StatelessWidget {
     });
   }
 
+//save new price from profit margin to database
   Future<bool> _saveProfitMarginToDB(String id, double salePrice) {
     return FirestoreRef.mealRef
         .doc(id)
@@ -319,6 +313,7 @@ class SingleMeal extends StatelessWidget {
     });
   }
 
+//Round widget to show profit margin in percent.
   Widget _profitMarginWidget(
       double localProfitMargin, Color indicatorColor, String negative) {
     localProfitMargin /= 100;

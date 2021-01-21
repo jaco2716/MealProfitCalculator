@@ -29,12 +29,14 @@ class _CreateMealState extends State<CreateMeal> {
   List<Ingredient> _selectedIngredients = List<Ingredient>();
   List<Ingredient> ingredients = List<Ingredient>();
 
+//Get all ingredients from firestore
   getIngredientsFromDB() async {
     QuerySnapshot snapshot = await FirestoreRef.ingredientRef.get();
     ingredients =
         snapshot.docs?.map((e) => Ingredient.fromJson(e.data()))?.toList();
   }
 
+//Check if meal is being edited and insert object.
   initEditMode() {
     if (widget.editMode ?? false) {
       _name = widget.editMeal.name;

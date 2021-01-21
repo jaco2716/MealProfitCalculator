@@ -15,6 +15,7 @@ class MyDrawer extends StatelessWidget {
       
       child: ListView(
         children: <Widget>[
+//Show user at top of app drawer
           // UserAccountsDrawerHeader(
           //   currentAccountPicture: CircleAvatar(child: Icon(Icons.person),),
           //   accountEmail: Text('Guest e-mail'),
@@ -40,6 +41,7 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
+//List tile for every page to go to.
   Widget drawerListTile(Icon _tileIcon, String _tileTitle, Widget _navigationPage, BuildContext context){
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),

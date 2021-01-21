@@ -34,11 +34,13 @@ class _CreateIngredientState extends State<CreateIngredient> {
     initEditMode();
   }
 
+//Check if ingredient is being edited and then insert object
   initEditMode() {
     if (widget.editMode ?? false) {
       currentColor = Color(widget.editIngredient.color);
       _name = widget.editIngredient.name;
       _kgPrice = widget.editIngredient.kgPrice.toString();
+      _measureUnit = widget.editIngredient.measureUnit;
     }
   }
 
@@ -157,22 +159,25 @@ class _CreateIngredientState extends State<CreateIngredient> {
     );
   }
 
+//create object and save
   _saveIngredient() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
       double finalKgPrice = double.parse(_kgPrice);
+//Create new id or use edit ingredient id
       int newID;
       if (widget.editMode ?? false)
         newID = widget.editIngredient.id;
       else
         newID = DateTime.now().millisecondsSinceEpoch;
 
+//Create object
       Ingredient newIngredient = Ingredient(
           newID, _name, finalKgPrice, currentColor.value, _measureUnit);
 
       bool dbSucess = false;
-
+//Check for internet connection and then save to database
       try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -183,7 +188,7 @@ class _CreateIngredientState extends State<CreateIngredient> {
         print('not connected');
         dbSucess = false;
       }
-
+//Show error or succes message
       if (dbSucess) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(_name + ' has been saved.'),
@@ -197,6 +202,7 @@ class _CreateIngredientState extends State<CreateIngredient> {
     }
   }
 
+//Save to firestore database
   Future<bool> _saveIngredientToDB(Ingredient newIngredient) async {
     return FirestoreRef.ingredientRef
         .doc(newIngredient.id.toString())
@@ -210,6 +216,7 @@ class _CreateIngredientState extends State<CreateIngredient> {
     });
   }
 
+//Show delete menu box
   _deleteIngredientDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -236,6 +243,7 @@ class _CreateIngredientState extends State<CreateIngredient> {
     );
   }
 
+//Delete ingredient and show error or succes messages
   _deleteIngredient(BuildContext context) async {
     bool deleteSuccess = false;
 
@@ -257,6 +265,7 @@ class _CreateIngredientState extends State<CreateIngredient> {
     }
   }
 
+//Delete ingredient from firestore database
   Future<bool> _deleteIngredientFromDB(Ingredient editIngredient) {
     return FirestoreRef.ingredientRef
         .doc(editIngredient.id.toString())
@@ -270,14 +279,17 @@ class _CreateIngredientState extends State<CreateIngredient> {
     });
   }
 
+//change focus to remove keyboard when background is tapped
   void changeFocus() {
     FocusScope.of(context).nextFocus();
   }
 
+//validate that input is not empty
   String validateString(String value) {
     return value.isEmpty ? 'Required' : null;
   }
 
+//validate that the number is valid
   String validateDouble(String value) {
     try {
       double.parse(value);
@@ -287,5 +299,6 @@ class _CreateIngredientState extends State<CreateIngredient> {
     }
   }
 
+//change color in the color selector
   void changeColor(Color color) => setState(() => currentColor = color);
 }

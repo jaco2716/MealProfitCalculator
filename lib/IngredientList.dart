@@ -46,6 +46,7 @@ class _IngredientListState extends State<IngredientList> {
                     return Text("Loading");
                   }
 
+//Map data from firestore to objects in list.
                   List<Ingredient> ingredients = List<Ingredient>();
                   ingredients = snapshot.data.docs
                       ?.map((e) => Ingredient.fromJson(e.data()))
@@ -70,16 +71,11 @@ class _IngredientListState extends State<IngredientList> {
     );
   }
 
+//List tile widget of every ingredient
   Widget ingredientListTile(Ingredient ingredient) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      // color: Colors.red[100],
       child: ListTile(
-        // leading: CircleAvatar(
-        //   child: Text(meal.id.toString(), style: TextStyle(color: Colors.white),),
-        //   radius: 15,
-        //   backgroundColor: Colors.blue[200],
-        // ),
         title: Row(children: [
           CircleAvatar(
             backgroundColor: Color(ingredient.color),
@@ -102,6 +98,7 @@ class _IngredientListState extends State<IngredientList> {
           ],
         ),
         onTap: () {
+//when tapped go to edit page.
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
                 CreateIngredient(editMode: true, editIngredient: ingredient),

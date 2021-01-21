@@ -72,11 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // loginMethod();
     _authSubscribe();
     _signInToFirebase();
   }
 
+//Check if user is signed in.
   _authSubscribe() {
     FirebaseAuth.instance.authStateChanges().listen((User user) {
       if (user == null) {
@@ -87,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+//Sign in anonymously to firebase to access data from database
   _signInToFirebase() async {
     try {
       await FirebaseAuth.instance
@@ -101,7 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //backgroundColor: Colors.grey[900],
         appBar: AppBar(
           title: Text('All Meals'),
         ),
