@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_profit_calculator/CreateIngredient.dart';
 import 'package:meal_profit_calculator/Model/FirestoreRef.dart';
-import 'package:meal_profit_calculator/SingleMeal.dart';
 
 import 'Model/Ingredient.dart';
-import 'Model/Meal.dart';
 
 class IngredientList extends StatefulWidget {
   IngredientList({Key key}) : super(key: key);
@@ -15,53 +13,59 @@ class IngredientList extends StatefulWidget {
 }
 
 class _IngredientListState extends State<IngredientList> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('All Ingredients')),
       body: SingleChildScrollView(
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 45.0),
-            child: ListTile(
-              visualDensity: VisualDensity.compact,
-              title: Text('Name'),
-              trailing: Text('Kg/Liter Cost'),
-              dense: true,
-            ),
-          ),
-          Divider(
-            thickness: 2,
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: FirestoreRef.ingredientRef.snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) {
-                return Text('Something went wrong');
-              }
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 700),
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0),
+                child: ListTile(
+                  visualDensity: VisualDensity.compact,
+                  title: Text('Name'),
+                  trailing: Text('Kg/Liter Cost'),
+                  dense: true,
+                ),
+              ),
+              // Divider(
+              //   thickness: 2,
+              // ),
+              StreamBuilder<QuerySnapshot>(
+                stream: FirestoreRef.ingredientRef.snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
 
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Text("Loading");
-              }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
 
-              List<Ingredient> ingredients = List<Ingredient>();
-              ingredients = snapshot.data.docs
-                  ?.map((e) => Ingredient.fromJson(e.data()))
-                  ?.toList();
-              return new ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ingredientListTile(ingredients[index]);
+                  List<Ingredient> ingredients = List<Ingredient>();
+                  ingredients = snapshot.data.docs
+                      ?.map((e) => Ingredient.fromJson(e.data()))
+                      ?.toList();
+                  return new ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ingredientListTile(ingredients[index]);
+                    },
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                  );
                 },
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-              );
-            },
+              ),
+              SizedBox(
+                height: 50,
+              )
+            ]),
           ),
-          SizedBox(height: 50,)
-        ]),
+        ),
       ),
     );
   }
@@ -82,14 +86,18 @@ class _IngredientListState extends State<IngredientList> {
             radius: 10,
           ),
           Text('   ' + ingredient.name),
-        ]),       
+        ]),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('${ingredient.kgPrice.toString()} Kr/${ingredient.measureUnit}'),
+            Text(
+                '${ingredient.kgPrice.toString()} Kr/${ingredient.measureUnit}'),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Icon(Icons.edit, color: Colors.grey,),
+              child: Icon(
+                Icons.edit,
+                color: Colors.grey,
+              ),
             )
           ],
         ),

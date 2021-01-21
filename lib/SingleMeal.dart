@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal_profit_calculator/CreateMeal.dart';
-import 'package:meal_profit_calculator/Model/Ingredient.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'Model/FirestoreRef.dart';

@@ -52,7 +52,7 @@ class _ChartPageState extends State<ChartPage> {
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) return Text('Something went wrong');
             if (snapshot.connectionState == ConnectionState.waiting)
-              return Center(child: CircularProgressIndicator());
+              return Container(height: 400, child: Center(child: CircularProgressIndicator()));
 
             if (dropDownValue == "Leo's Wok Orders")
               orderList = snapshot.data.docs
@@ -163,6 +163,7 @@ class _ChartPageState extends State<ChartPage> {
                   color: Colors.deepOrange[400], fontWeight: FontWeight.w900),
             ),
           Container(
+            constraints: BoxConstraints(maxWidth: 800),
             height: 520,
             width: double.infinity,
             padding: EdgeInsets.only(top: 10, bottom: 70, right: 30, left: 15),
@@ -175,6 +176,7 @@ class _ChartPageState extends State<ChartPage> {
                 titlesData: FlTitlesData(
                     show: true,
                     leftTitles: SideTitles(
+                      margin: 10,
                       interval: 1,
                       getTextStyles: (_) =>
                           TextStyle(color: Colors.white, fontSize: 12),
@@ -209,7 +211,13 @@ class _ChartPageState extends State<ChartPage> {
                       color: Colors.white38,
                       strokeWidth: 1,
                     );
-                    if (value % _nrInterval == 0) {
+                    if(value == 0) {
+                      return FlLine(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      );
+                    }
+                    else if (value % _nrInterval == 0) {
                       return thickLine;
                     } else {
                       return FlLine(
@@ -259,7 +267,10 @@ class _ChartPageState extends State<ChartPage> {
               ),
             ),
           ),
-          _customDropDownButton(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15.0),
+            child: _customDropDownButton(),
+          ),
         ],
       ),
     );

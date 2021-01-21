@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dk.wejeo.meal_profit_calculator">
    <application
-        android:label="meal_profit_calculator"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Profit Calculator"
+        android:icon="@mipmap/launcher_icon"
+        android:roundIcon="@mipmap/ic_launcher_round">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

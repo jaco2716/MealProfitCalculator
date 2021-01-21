@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_profit_calculator/MealList.dart';
-import 'package:meal_profit_calculator/Model/Ingredient.dart';
-import 'package:meal_profit_calculator/Model/Meal.dart';
 import 'package:meal_profit_calculator/MyDrawer.dart';
 
 void main() {
@@ -17,7 +15,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
       // Initialize FlutterFire:
       future: _initialization,
@@ -48,7 +45,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -93,7 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _signInToFirebase() async {
     try {
-      await FirebaseAuth.instance.signInAnonymously();
+      await FirebaseAuth.instance
+          .signInAnonymously()
+          .then((value) => build(context));
     } catch (e) {
       print('Failed to login with error code: ${e.code}');
       print(e.message);
@@ -105,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         //backgroundColor: Colors.grey[900],
         appBar: AppBar(
-          title: Text('Meal Calculator'),
+          title: Text('All Meals'),
         ),
         drawer: MyDrawer(),
         body: MealList());

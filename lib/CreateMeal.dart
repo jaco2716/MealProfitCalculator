@@ -60,155 +60,161 @@ class _CreateMealState extends State<CreateMeal> {
         title: Text('Create Meal'),
       ),
       body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                  ),
-                  initialValue: _name,
-                  keyboardType: TextInputType.name,
-                  validator: (value) => validateString(value),
-                  onSaved: (value) => _name = value,
-                  onFieldSubmitted: (value) => changeFocus(),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: Form(
+              key: _formKey,
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  !_salePriceChosen
-                      ? Container(
-                          width: 150,
-                          child: Text(
-                            'Sale Price in kr,-',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey),
-                          ))
-                      : Container(
-                          width: 150,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Sale Price in kr,-',
-                            ),
-                            initialValue: _salePrice,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9.]'))
-                            ],
-                            keyboardType: TextInputType.phone,
-                            validator: (value) => validateDouble(value),
-                            onSaved: (value) => _salePrice = value,
-                            onFieldSubmitted: (value) => changeFocus(),
-                          ),
-                        ),
-                  CircleAvatar(
-                    child: IconButton(
-                      icon: Icon(_salePriceChosen
-                          ? Icons.arrow_back
-                          : Icons.arrow_forward),
-                      onPressed: () {
-                        setState(() {
-                          _salePriceChosen = !_salePriceChosen;
-                        });
-                      },
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                      ),
+                      initialValue: _name,
+                      keyboardType: TextInputType.name,
+                      validator: (value) => validateString(value),
+                      onSaved: (value) => _name = value,
+                      onFieldSubmitted: (value) => changeFocus(),
                     ),
                   ),
-                  _salePriceChosen
-                      ? Container(
-                          width: 150,
-                          child: Text(
-                            'Profit Margin in %',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey),
-                          ))
-                      : Container(
-                          width: 150,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Profit Margin in %',
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      !_salePriceChosen
+                          ? Container(
+                              width: 150,
+                              child: Text(
+                                'Sale Price in kr,-',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.grey),
+                              ))
+                          : Container(
+                              width: 150,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Sale Price in kr,-',
+                                ),
+                                initialValue: _salePrice,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9.]'))
+                                ],
+                                keyboardType: TextInputType.phone,
+                                validator: (value) => validateDouble(value),
+                                onSaved: (value) => _salePrice = value,
+                                onFieldSubmitted: (value) => changeFocus(),
+                              ),
                             ),
-                            initialValue: _profitMargin,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9.]'))
-                            ],
-                            keyboardType: TextInputType.phone,
-                            validator: (value) => validateDouble(value),
-                            onSaved: (value) => _profitMargin = value,
-                            onFieldSubmitted: (value) => changeFocus(),
-                          ),
+                      CircleAvatar(
+                        child: IconButton(
+                          icon: Icon(_salePriceChosen
+                              ? Icons.arrow_back
+                              : Icons.arrow_forward),
+                          onPressed: () {
+                            setState(() {
+                              _salePriceChosen = !_salePriceChosen;
+                            });
+                          },
                         ),
+                      ),
+                      _salePriceChosen
+                          ? Container(
+                              width: 150,
+                              child: Text(
+                                'Profit Margin in %',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.grey),
+                              ))
+                          : Container(
+                              width: 150,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Profit Margin in %',
+                                ),
+                                initialValue: _profitMargin,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9.]'))
+                                ],
+                                keyboardType: TextInputType.phone,
+                                validator: (value) => validateDouble(value),
+                                onSaved: (value) => _profitMargin = value,
+                                onFieldSubmitted: (value) => changeFocus(),
+                              ),
+                            ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: ListView.builder(
+                      itemCount: _selectedIngredients.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ingredientListTile(_selectedIngredients[index]);
+                      },
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 200,
+                    child: RaisedButton.icon(
+                        padding: EdgeInsets.all(15),
+                        icon: Icon(Icons.add),
+                        label: Text('Add Ingredients'),
+                        color: Colors.pink,
+                        onPressed: () {
+                          _showEditIngredients(ingredients);
+                        }),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    width: 200,
+                    child: RaisedButton.icon(
+                        icon: Icon(Icons.save),
+                        padding: EdgeInsets.all(15),
+                        label: Text('Save Meal'),
+                        onPressed: () => _saveMeal(false)),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  widget.editMode ?? false
+                      ? Container(
+                          width: 200,
+                          child: FlatButton.icon(
+                              icon: Icon(Icons.copy),
+                              padding: EdgeInsets.all(15),
+                              label: Text('Dublicate'),
+                              onPressed: () => _saveMeal(true)),
+                        )
+                      : Center(),
+                  SizedBox(
+                    height: 50,
+                  ),
                 ],
               ),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: ListView.builder(
-                  itemCount: _selectedIngredients.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ingredientListTile(_selectedIngredients[index]);
-                  },
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: 200,
-                child: RaisedButton.icon(
-                    padding: EdgeInsets.all(15),
-                    icon: Icon(Icons.add),
-                    label: Text('Add Ingredients'),
-                    color: Colors.pink,
-                    onPressed: () {
-                      _showEditIngredients(ingredients);
-                    }),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: 200,
-                child: RaisedButton.icon(
-                    icon: Icon(Icons.save),
-                    padding: EdgeInsets.all(15),
-                    label: Text('Save Meal'),
-                    onPressed: () => _saveMeal(false)),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              widget.editMode ?? false
-                  ? Container(
-                      width: 200,
-                      child: FlatButton.icon(
-                          icon: Icon(Icons.copy),
-                          padding: EdgeInsets.all(15),
-                          label: Text('Dublicate'),
-                          onPressed: () => _saveMeal(true)),
-                    )
-                  : Center(),
-              SizedBox(
-                height: 50,
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
+  //Show a menu to choose wich ingredients are in the meal
   _showEditIngredients(List<Ingredient> ingredients) {
     showModalBottomSheet(
       enableDrag: false,
@@ -258,6 +264,7 @@ class _CreateMealState extends State<CreateMeal> {
     );
   }
 
+// Create final meal object and save it
   _saveMeal(bool dublicate) async {
     if (_formKey.currentState.validate()) {
       int nullIndex = _selectedIngredients
@@ -275,11 +282,10 @@ class _CreateMealState extends State<CreateMeal> {
         if (_salePriceChosen)
           _finalSalePrice = double.parse(_salePrice);
         else
-          _finalSalePrice = _totalPrice / (1 - double.parse(_profitMargin) / 100);
-          
-          
+          _finalSalePrice =
+              _totalPrice / (1 - double.parse(_profitMargin) / 100);
 
-          _finalSalePrice = (_finalSalePrice  * 100).roundToDouble() /100;
+        _finalSalePrice = (_finalSalePrice * 100).roundToDouble() / 100;
 
         int newID;
         if (!dublicate) {
@@ -291,7 +297,8 @@ class _CreateMealState extends State<CreateMeal> {
           newID = DateTime.now().millisecondsSinceEpoch;
 
         // print(newID);
-        Meal newMeal = Meal(newID, _name, _finalSalePrice, _selectedIngredients);
+        Meal newMeal =
+            Meal(newID, _name, _finalSalePrice, _selectedIngredients);
 
         bool dbSucess = false;
         try {
@@ -337,6 +344,7 @@ class _CreateMealState extends State<CreateMeal> {
     }
   }
 
+// Save object to Firestore database
   Future<bool> _saveMealToDB(Meal newMeal) {
     return FirestoreRef.mealRef
         .doc(newMeal.id.toString())
@@ -350,6 +358,7 @@ class _CreateMealState extends State<CreateMeal> {
     });
   }
 
+// Each ingredient tile of the selected ingredients.
   Widget ingredientListTile(Ingredient ingredient) {
     TextEditingController tec =
         TextEditingController(text: ingredient.amountInGrams?.toString() ?? '');
@@ -385,6 +394,7 @@ class _CreateMealState extends State<CreateMeal> {
     );
   }
 
+  //Give ingredients an amountInGrams value
   void takeNumber(String text, int itemId) {
     try {
       int ingredientIndex = _selectedIngredients
@@ -400,6 +410,7 @@ class _CreateMealState extends State<CreateMeal> {
     }
   }
 
+// Each ingredient widget in the menu to choose ingredients
   Widget addIngredientListTile(Ingredient ingredient, Function setModalState) {
     return Card(
       child: CheckboxListTile(
@@ -420,6 +431,7 @@ class _CreateMealState extends State<CreateMeal> {
     );
   }
 
+// Add or remove the ingredient pressed to a new list of selected ingredients
   void _onIngredientSelected(
       bool selected, Ingredient ingredient, Function setModalState) {
     if (selected == true) {
@@ -433,14 +445,17 @@ class _CreateMealState extends State<CreateMeal> {
     }
   }
 
+// change the focus from fx a textfield to remove keyboard when background is pressed
   void changeFocus() {
     FocusScope.of(context).nextFocus();
   }
 
+//check if string is empty
   String validateString(String value) {
     return value.isEmpty ? 'Required' : null;
   }
 
+// Check if the number value is valid
   String validateDouble(String value) {
     try {
       double.parse(value);
