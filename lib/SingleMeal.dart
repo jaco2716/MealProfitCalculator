@@ -90,11 +90,11 @@ class SingleMeal extends StatelessWidget {
           meal.profitMargin < 0
               ? _profitMarginWidget(-meal.profitMargin, Colors.orange[700], '-')
               : _profitMarginWidget(meal.profitMargin, Colors.green[700], ''),
-          RaisedButton(
-              child: Text('Choose Profit Margin'),
-              onPressed: () {
-                _showChangeProfitMargin(context);
-              }),
+          // RaisedButton(
+          //     child: Text('Choose Profit Margin'),
+          //     onPressed: () {
+          //       _showChangeProfitMargin(context);
+          //     }),
           Card(
             margin: EdgeInsets.all(20),
             child: Column(
@@ -163,80 +163,82 @@ class SingleMeal extends StatelessWidget {
   }
 
 //Show menu to calculate price from profit margin
-  _showChangeProfitMargin(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        TextEditingController tec = TextEditingController();
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Calculate the Sale Price from a Profit Margin'),
-              Container(
-                  padding: EdgeInsets.all(5),
-                  width: 100,
-                  child: TextField(
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-                    ],
-                    keyboardType: TextInputType.phone,
-                    maxLength: 2,
-                    maxLengthEnforced: true,
-                    controller: tec,
-                    decoration: InputDecoration(
-                        hintText: '%',
-                        border: OutlineInputBorder(),
-                        counterText: ''),
-                  )),
-            ],
-          ),
-          actions: [
-            FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Cancel')),
-            RaisedButton(
-              onPressed: () async {
-//Calculate price from profit margin and save it to firestore.
-                String textfield = tec.text;
-                double profitMargin;
-                if (textfield != null)
-                  profitMargin = double.tryParse(textfield);
-                if (profitMargin != null) {
-                  double newSalePrice =
-                      meal.totalCost / (1 - profitMargin / 100);
-                  print(newSalePrice);
-                  bool dbSucess = false;
-                  dbSucess = await _saveProfitMarginToDB(
-                      meal.id.toString(), newSalePrice);
+//   _showChangeProfitMargin(BuildContext context) {
+//     showDialog(
+//       context: context,
+//       builder: (context) {
+//         TextEditingController tec = TextEditingController();
+//         return AlertDialog(
+//           content: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Text('Calculate the Sale Price from a Profit Margin'),
+//               Container(
+//                   padding: EdgeInsets.all(5),
+//                   width: 100,
+//                   child: TextField(
+//                     inputFormatters: <TextInputFormatter>[
+//                       FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+//                     ],
+//                     keyboardType: TextInputType.phone,
+//                     maxLength: 2,
+//                     maxLengthEnforced: true,
+//                     controller: tec,
+//                     decoration: InputDecoration(
+//                         hintText: '%',
+//                         border: OutlineInputBorder(),
+//                         counterText: ''),
+//                   )),
+//             ],
+//           ),
+//           actions: [
+//             FlatButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pop();
+//                 },
+//                 child: Text('Cancel')),
+//             RaisedButton(
+//               onPressed: () async {
+// //Calculate price from profit margin and save it to firestore.
+//                 String textfield = tec.text;
+//                 double profitMargin;
+//                 if (textfield != null)
+//                   profitMargin = double.tryParse(textfield);
+//                 if (profitMargin != null) {
+//                   double newSalePrice =
+//                       ((meal.totalCost / (1 - profitMargin / 100)) * 100)
+//                               .roundToDouble() /
+//                           100;
+//                   print(newSalePrice);
+//                   bool dbSucess = false;
+//                   dbSucess = await _saveProfitMarginToDB(
+//                       meal.id.toString(), newSalePrice);
 
-                  if (dbSucess) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Profit Margin has been saved.'),
-                    ));
-                    meal.salePrice = newSalePrice;
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SingleMeal(meal.name, meal),
-                        ));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Something went wrong, please try again.'),
-                    ));
-                  }
-                }
-              },
-              child: Text('Accept'),
-            )
-          ],
-        );
-      },
-    );
-  }
+//                   if (dbSucess) {
+//                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//                       content: Text('Profit Margin has been saved.'),
+//                     ));
+//                     meal.salePrice = newSalePrice;
+//                     Navigator.pop(context);
+//                     Navigator.pushReplacement(
+//                         context,
+//                         MaterialPageRoute(
+//                           builder: (context) => SingleMeal(meal.name, meal),
+//                         ));
+//                   } else {
+//                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//                       content: Text('Something went wrong, please try again.'),
+//                     ));
+//                   }
+//                 }
+//               },
+//               child: Text('Accept'),
+//             )
+//           ],
+//         );
+//       },
+//     );
+//   }
 
 //Show menu to delete meal.
   _deleteMealDialog(BuildContext context) {
@@ -301,17 +303,17 @@ class SingleMeal extends StatelessWidget {
   }
 
 //save new price from profit margin to database
-  Future<bool> _saveProfitMarginToDB(String id, double salePrice) {
-    return FirestoreRef.mealRef
-        .doc(id)
-        .update({"salePrice": salePrice}).then((value) {
-      print("DB updated");
-      return true;
-    }).catchError((error) {
-      print("Failed to update salePrice in DB: $error");
-      return false;
-    });
-  }
+  // Future<bool> _saveProfitMarginToDB(String id, double salePrice) {
+  //   return FirestoreRef.mealRef
+  //       .doc(id)
+  //       .update({"salePrice": salePrice}).then((value) {
+  //     print("DB updated");
+  //     return true;
+  //   }).catchError((error) {
+  //     print("Failed to update salePrice in DB: $error");
+  //     return false;
+  //   });
+  // }
 
 //Round widget to show profit margin in percent.
   Widget _profitMarginWidget(

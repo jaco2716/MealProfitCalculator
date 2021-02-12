@@ -191,19 +191,19 @@ class _CreateMealState extends State<CreateMeal> {
                         label: Text('Save Meal'),
                         onPressed: () => _saveMeal(false)),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  widget.editMode ?? false
-                      ? Container(
-                          width: 200,
-                          child: FlatButton.icon(
-                              icon: Icon(Icons.copy),
-                              padding: EdgeInsets.all(15),
-                              label: Text('Dublicate'),
-                              onPressed: () => _saveMeal(true)),
-                        )
-                      : Center(),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // widget.editMode ?? false
+                  //     ? Container(
+                  //         width: 200,
+                  //         child: FlatButton.icon(
+                  //             icon: Icon(Icons.copy),
+                  //             padding: EdgeInsets.all(15),
+                  //             label: Text('Dublicate'),
+                  //             onPressed: () => _saveMeal(true)),
+                  //       )
+                  //     : Center(),
                   SizedBox(
                     height: 50,
                   ),
